@@ -1,0 +1,188 @@
+﻿@model REDMIS.Models.OldProjectReport
+@using REDMIS.Models
+@{
+    ViewBag.Title = "BuilingWorkRPT";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link href="~/Select/select2.css" rel="stylesheet" />
+<script src="~/Select/select2.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/Site.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script>
+    $(document).ready(function ($) {
+        $('#FromDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true
+        }); $('#ToDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true
+        });
+        document.getElementById("DistrictId").setAttribute("disabled", true);
+    });
+
+
+</script>
+<fieldset class="mt-3 ">
+    <div class="row">
+        @using (Html.BeginForm("ProjectReport", "RED", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.HiddenFor(m => m.WorkId, new { @Id = "WorkId", @name = "WorkId" })
+
+            <div class="card-body">
+
+                <h4 class="text-center">Old Project Report</h4>
+
+                <div class="row mx-1 mt-3">
+                    @if (Request.RequestContext.HttpContext.Session["UserType"].ToString() != "5")
+                    {
+                        <div class="col-md-3">
+                            <label for="ZoneId">Zone<span class="text-danger">*</span></label>
+                            @Html.DropDownListFor(m => m.ZoneId, new SelectListItem[] { new SelectListItem { Text = "--Select--", Value = "0" }, new SelectListItem { Text = "Zone 1", Value = "1" }, new SelectListItem { Text = "Zone 2", Value = "2" }, new SelectListItem { Text = "Zone 3", Value = "3" } }, new { @id = "ZoneId", @name = "ZoneId", @class = "form-control mb-3" })
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="CircleId">Circle Name <span class="text-danger">*</span></label>
+                            @Html.DropDownListFor(m => m.CircleId, (new MasterData()).LoadMaster(3), new { @id = "CircleId", @name = "CircleId", @class = "form-control mb-3" })
+                        </div>
+                        <div class="col-md-3">
+                            <label for="DistrictId">District Name <span class="text-danger">*</span></label>
+                            @Html.DropDownListFor(m => m.DistrictId, (new MasterData()).LoadMaster(2), new { @id = "DistrictId", @name = "DistrictId", @class = "form-control mb-3" })
+                        </div>
+                    }
+
+                    @*<div class="col-md-3">
+                            <label for="BlockId">vikashkhand Name <span class="text-danger">*</span></label>
+                            @Html.DropDownListFor(m => m.VikashkhandId, (new MasterData()).LoadMaster(2), new { @id = "VikashkhandId", @name = "VikashkhandId", @class = "form-control mb-3" })
+                        </div>*@
+                    <div class="col-md-3">
+                        <label for="DepartmentId">Work Type <span class="text-danger">*</span></label>
+                        @Html.DropDownListFor(m => m.WorkTypeId, (new MasterData()).LoadMaster(6), new { @id = "WorkTypeId", @name = "WorkTypeId", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="SchemeId">Program Name <span class="text-danger">*</span></label>
+                        @Html.DropDownListFor(m => m.ProgramId, (new MasterData()).LoadMaster(5), new { @id = "ProgramId", @name = "ProgramId", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="HandOverDate">From Date<span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.FromDate, new { @id = "FromDate", @name = "FromDate", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="HandOverDate">To Date<span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.ToDate, new { @id = "ToDate", @name = "ToDate", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="HandOverDate">From Cost<span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.FromCost, new { @id = "FromCost", @name = "FromCost", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <label for="HandOverDate">To Cost<span class="text-danger">*</span></label>
+                        @Html.TextBoxFor(m => m.ToCost, new { @id = "ToCost", @name = "ToCost", @class = "form-control mb-3" })
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" class="btn btn-primary mt-4 ms-2" id="btnsubmit" value="Show" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="row  mt-5">
+                <div class="table-wrapper table-responsive">
+                    <table class="table table-bordered" id="sampletable2">
+                        <thead style="background: #A6AEBF ">
+                            <tr>
+                                <th>Sno</th>
+                                <th>Division_Name</th>
+                                <th>Program_Name</th>
+                                <th>Work_Type_Name</th>
+                                <th>Work_NameUnicode</th>
+                                <th>Work_Name</th>
+                                <th>Length_QTY</th>
+                                <th>Pulia_QTY</th>
+                                <th>Sanctioned_Date</th>
+                                <th>Sanctioned_Amount</th>
+                                <th>Start_Date</th>
+                                <th>Target_Date</th>
+                                <th>Expected_End_Date</th>
+                                <th>Actual_End_Date</th>
+                                <th>Handover_Date</th>
+                                <th>Work_Status</th>
+                                <th>mitti</th>
+                                <th>puliya</th>
+                                <th>g1</th>
+                                <th>g2</th>
+                                <th>g3</th>
+                                <th>lepan</th>
+                                <th>khadanja</th>
+                                <th>TransDate</th>
+                                <th>Scheme_Name</th>
+                                <th>Block_Name</th>
+                                <th>Estimated_Cost</th>
+                                <th>Sanctioned_LNo</th>
+                                <th>Release_Amount</th>
+                                <th>Release_Amount_Date</th>
+                                <th>Release_Amount_LNo</th>
+                                <th>Remark</th>
+                                <th>Longitude</th>
+                                <th>Latitude</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{ var sn = 1;}
+                            @if (ViewBag.listdata != null)
+                            {
+                                foreach (var item in ViewBag.listdata)
+                                {
+                                    <tr class="text-center align-middle">
+                                        <td>@(sn++)</td>
+                                        <td>@item.Division_Name</td>
+                                        <td>@item.Program_Name</td>
+                                        <td>@item.Work_Type_Name</td>
+                                        <td>@item.Work_NameUnicode</td>
+                                        @*<td><a  onclick='location.href = "@Url.Action("ProjectRptDrill","RED",new {WorkId=@item.WorkId,WorkTypeId=item.WorkTypeId })"'  style="color:blue;cursor:pointer;"  >@item.Work_Name</a></td>*@
+                                        <td><a href="~/RED/ProjectRptDrill?WorkId=@item.WorkId&&WorkTypeId=@item.WorkTypeId" target="_blank">@item.Work_Name</a></td>
+                                        <td>@item.Length_QTY</td>
+                                        <td>@item.Pulia_QTY</td>
+                                        <td>@item.Sanctioned_Date</td>
+                                        <td>@item.Sanctioned_Amount</td>
+                                        <td>@item.Start_Date</td>
+                                        <td>@item.Target_Date</td>
+                                        <td>@item.Expected_End_Date</td>
+                                        <td>@item.Actual_End_Date</td>
+                                        <td>@item.Handover_Date</td>
+                                        <td>@item.Work_Status</td>
+                                        <td>@item.mitti</td>
+                                        <td>@item.puliya</td>
+                                        <td>@item.g1</td>
+                                        <td>@item.g2</td>
+                                        <td>@item.g3</td>
+                                        <td>@item.lepan</td>
+                                        <td>@item.khadanja</td>
+                                        <td>@item.TransDate</td>
+                                        <td>@item.Scheme_Name</td>
+                                        <td>@item.Block_Name</td>
+                                        <td>@item.Estimated_Cost</td>
+                                        <td>@item.Sanctioned_LNo</td>
+                                        <td>@item.Release_Amount</td>
+                                        <td>@item.Release_Amount_Date</td>
+                                        <td>@item.Release_Amount_LNo</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.Longitude</td>
+                                        <td>@item.Latitude</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        }
+    </div>
+</fieldset>
+

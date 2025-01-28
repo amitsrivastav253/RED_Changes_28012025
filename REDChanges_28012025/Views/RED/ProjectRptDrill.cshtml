@@ -1,0 +1,96 @@
+﻿@model REDMIS.Models.OldProjectReport
+@using REDMIS.Models
+@{
+    ViewBag.Title = "ProjectRptDrill";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link href="~/Select/select2.css" rel="stylesheet" />
+<script src="~/Select/select2.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script src="~/Scripts/Site.js"></script>
+<link href="~/Content/Site.css" rel="stylesheet" />
+<script>
+    $(document).ready(function ($) {
+        $('#FromDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true
+        }); $('#ToDate').datepicker({
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+<fieldset class="mt-3 ">
+    @using (Html.BeginForm("ProjectRptDrill", "RED", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="row">
+            <div class="card-body">
+                <h4 class="text-center">Project Detail Report Work Type: ( @ViewBag.WorkTypeId  )</h4>
+
+            </div>
+            <div class="row  mt-5">
+                <div class="table-wrapper table-responsive">
+                    <table class="table table-bordered" id="sampletable2">
+                        <thead style="background: #A6AEBF ">
+                            <tr>
+                                <th>Sno</th>
+                                <th>Year_Name</th>
+                                <th>Month_Name</th>
+                                <th>Divsion_Name</th>
+                                <th>District_Name</th>
+                                <th>Department_Name</th>
+                                <th>Program_Name</th>
+                                <th>Work_Name</th>
+                                <th>Sanctioned_Date</th>
+                                <th>Sanctioned_Amount</th>
+                                <th>Availabe_Amount</th>
+                                <th>Physical_Progress</th>
+                                <th>Expenses</th>
+                                <th>Building Status</th>
+                                <th>Pulia Status</th>
+                                <th>Road Started</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{ var sn = 1;}
+                            @if (ViewBag.listdata != null)
+                            {
+                                foreach (var item in ViewBag.listdata)
+                                {
+                                    <tr class="text-center align-middle">
+                                        <td>@(sn++)</td>
+                                        <td>@item.YearName</td>
+                                        <td>@item.MonthName</td>
+                                        <td>@item.Division_Name</td>
+                                        <td>@item.District</td>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.Program_Name</td>
+                                        <td>@item.Work_Name</td>
+                                        <td>@item.Sanctioned_Date</td>
+                                        <td>@item.Sanctioned_Amount</td>
+                                        <td>@item.Available_Amount</td>
+                                        <td>@item.PhysicalProgress</td>
+                                        <td>@item.Expenses</td>
+                                        <td>@item.BuildingStatus</td>
+                                        <td>@item.PuliaStatus</td>
+                                        <td>@item.RoadStatus</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    }
+</fieldset>
+
